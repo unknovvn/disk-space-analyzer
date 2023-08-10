@@ -16,7 +16,7 @@ func NavigateDir(current_dir string) (string, error) {
 
 	entries, err := os.ReadDir(current_dir)
 	if err != nil {
-		fmt.Println("Error occured while scanning directories: %s", err)
+		return "", err
 	}
 
 	for _, entry := range entries {
