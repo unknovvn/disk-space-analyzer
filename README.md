@@ -7,3 +7,6 @@ CLI tool to analyze disk space usage
 ## Contributors
 
 - [Andžej Korovacki](https://github.com/unknovvn) - creator and maintainer
+
+[license badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[license]: https://github.com/Unknovvn/dividend_portfolio_tracker_cli/blob/main/LICENSE
