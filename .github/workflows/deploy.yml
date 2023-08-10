@@ -21,7 +21,7 @@ jobs:
         run: echo "GOARCH=amd64" >> $GITHUB_ENV
 
       - name: Build binary
-        run: go build -o bin/disk-space-analyzer ./cmd/main.go
+        run: go build -o bin/disk-space-analyzer.exe ./cmd/main.go
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
