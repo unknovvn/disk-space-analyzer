@@ -4,21 +4,24 @@ on:
   workflow_dispatch: 
 
 jobs:
-
   deploy-windows:
     runs-on: ubuntu-latest
-
     steps:
-
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: '1.20'
 
+      - name: Set GO OS
+        run: echo "GOOS=windows" >> $GITHUB_ENV
+
+      - name: Set GO ARCH
+        run: echo "GOARCH=amd64" >> $GITHUB_ENV
+
       - name: Build binary
-        run: GOOS=windows GOARCH=amd64 go build -o bin/disk-space-analyzer ./cmd/main.go
+        run: go build -o bin/disk-space-analyzer ./cmd/main.go
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -28,15 +31,19 @@ jobs:
 
   deploy-ubuntu:
     runs-on: ubuntu-latest
-
     steps:
-
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: '1.20'
+
+      - name: Set GO OS
+        run: echo "GOOS=linux" >> $GITHUB_ENV
+
+      - name: Set GO ARCH
+        run: echo "GOARCH=amd64" >> $GITHUB_ENV
 
       - name: Build binary
         run: go build -o bin/disk-space-analyzer ./cmd/main.go
