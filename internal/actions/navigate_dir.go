@@ -38,7 +38,7 @@ func NavigateDir(current_dir string) (string, error) {
 	}
 
 	if key < 0 || key > len(directories) {
-		return "", errors.New("Incorrect directory key was selected!")
+		return "", errors.New("incorrect directory key was selected")
 	}
 
 	return directories[key], nil
