@@ -1,44 +1,45 @@
 package analysis
 
 import (
-	"fmt"
+	"io/fs"
+	"path"
+	"sort"
 
-	"github.com/alexeyco/simpletable"
+	getFolderSize "github.com/markthree/go-get-folder-size/src"
 )
 
-type result struct {
-	name    string
-	size_mb float64
+type Record struct {
+	Name       string
+	Size_bytes int64
 }
 
-func Run(path string) {
-	results := []result{
-		{name: "wasd", size_mb: 25},
-		{name: "wasd", size_mb: 25},
-	}
+type record_list []Record
 
-	printResult(results)
-}
+func (r record_list) Len() int           { return len(r) }
+func (r record_list) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }
+func (r record_list) Less(i, j int) bool { return r[i].Size_bytes > r[j].Size_bytes }
 
-func printResult(results []result) {
-	table := simpletable.New()
-
-	table.Header = &simpletable.Header{
-		Cells: []*simpletable.Cell{
-			{Align: simpletable.AlignLeft, Text: "Name"},
-			{Align: simpletable.AlignLeft, Text: "Size"},
-		},
-	}
-
-	for _, result := range results {
-		row := []*simpletable.Cell{
-			{Align: simpletable.AlignLeft, Text: result.name},
-			{Align: simpletable.AlignLeft, Text: fmt.Sprintf("%.2f MB", result.size_mb)},
+func Run(current_dir string, entries []fs.DirEntry) (record_list, error) {
+	records := make(record_list, len(entries))
+	for idx, entry := range entries {
+		fileInfo, err := entry.Info()
+		if err != nil {
+			return nil, err
 		}
 
-		table.Body.Cells = append(table.Body.Cells, row)
+		if fileInfo.IsDir() {
+			dir_size, err := getFolderSize.Invoke(path.Join(current_dir, fileInfo.Name()))
+			if err != nil {
+				return nil, err
+			}
+
+			records[idx] = Record{Name: fileInfo.Name(), Size_bytes: dir_size}
+		} else {
+			records[idx] = Record{Name: fileInfo.Name(), Size_bytes: fileInfo.Size()}
+		}
 	}
 
-	table.SetStyle(simpletable.StyleCompactLite)
-	fmt.Println(table.String())
+	sort.Sort(records)
+
+	return records, nil
 }

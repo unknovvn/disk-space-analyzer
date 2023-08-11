@@ -6,7 +6,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 )
 
 func NavigateDir(current_dir string) (string, error) {
@@ -20,7 +19,7 @@ func NavigateDir(current_dir string) (string, error) {
 	}
 
 	for _, entry := range entries {
-		if entry.IsDir() && !strings.HasPrefix(entry.Name(), ".") {
+		if entry.IsDir() {
 			directories = append(directories, path.Join(current_dir, entry.Name()))
 		}
 	}
